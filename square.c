@@ -24,6 +24,14 @@ typedef int boolean;
 #define FALSE 0
 #define TRUE  1
 
+typedef unsigned char size;
+#define MAX_SIZE 30
+
+size areaSize;
+size grid[MAX_SIZE][MAX_SIZE] = {{0}};
+
+
+//==============================USAGE======================================
 
 void help(char *name) {
     fprintf(stderr, "The program %s constructs no-touch squarings of a given square.\n\n", name);
@@ -64,6 +72,18 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
     }
-
+    
+    if(argc - optind != 1){
+        fprintf(stderr, "Illegal number of arguments.\n");
+        usage(name);
+        return EXIT_FAILURE;
+    }
+    
+    areaSize = (size)atoi(argv[optind]);
+    if(areaSize > MAX_SIZE){
+        fprintf(stderr, "Squares of that size are not supported.\n");
+        return EXIT_FAILURE;
+    }
+    
     return EXIT_SUCCESS;
 }
