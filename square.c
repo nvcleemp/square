@@ -30,6 +30,18 @@ typedef unsigned char size;
 size areaSize;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 
+#define SET_SQUARE(X,Y,S) {int local_i, local_j; \
+                           for(local_i = (X); local_i < (X) + (S); local_i++)\
+                               for(local_j = (Y); local_j < (Y) + (S); local_j++)\
+                                   grid[local_i][local_j] = (S);\
+                          }
+
+#define UNSET_SQUARE(X,Y,S) {int local_i, local_j; \
+                             for(local_i = (X); local_i < (X) + (S); local_i++)\
+                                 for(local_j = (Y); local_j < (Y) + (S); local_j++)\
+                                     grid[local_i][local_j] = 0;\
+                            }
+
 
 //==============================USAGE======================================
 
