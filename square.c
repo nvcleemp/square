@@ -42,7 +42,17 @@ size grid[MAX_SIZE][MAX_SIZE] = {{0}};
                                      grid[local_i][local_j] = 0;\
                             }
 
+//=============================EXPORT======================================
 
+void printSquare(FILE *f){
+    int i, j;
+    for(i = 0; i < areaSize; i++){
+        for(j = 0; j < areaSize; j++){
+            fprintf(f, "%d", grid[i][j]);
+        }
+        fprintf(f, "\n");
+    }
+}
 //==============================USAGE======================================
 
 void help(char *name) {
