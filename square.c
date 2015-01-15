@@ -344,6 +344,8 @@ void help(char *name) {
     fprintf(stderr, "Usage\n=====\n");
     fprintf(stderr, " %s [options] n\n\n", name);
     fprintf(stderr, "Valid options\n=============\n");
+    fprintf(stderr, "    -t, --tikz\n");
+    fprintf(stderr, "       Write a tikzpicture for each solution to stdout.\n");
     fprintf(stderr, "    -h, --help\n");
     fprintf(stderr, "       Print this help and return.\n");
 }
