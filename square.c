@@ -25,7 +25,7 @@ typedef int boolean;
 #define TRUE  1
 
 typedef unsigned char size;
-#define MAX_SIZE 30
+#define MAX_SIZE 100
 
 size areaSize;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
