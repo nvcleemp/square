@@ -103,6 +103,25 @@ void addNextSquare(int lastX, int lastY){
     
     size s;
     for(s = minSize; s <= maxSize; s++){
+        if(y - 1 >= 0){
+            int i = 0;
+            while(i < s && SQUARE(x + i, y - 1) != s) {
+                i++;
+            }
+            if(i < s){
+                continue;
+            }
+        }
+        if(x - 1 >= 0){
+            if(SQUARE(x - 1, y) == s){
+                continue;
+            }
+        }
+        if(x + s + 1 < areaSize){
+            if(SQUARE(x + s + 1, y) == s){
+                continue;
+            }
+        }
         SET_SQUARE(x, y, s);
         addNextSquare(x, y);
         UNSET_SQUARE(x, y, s);
