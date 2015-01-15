@@ -53,6 +53,35 @@ unsigned int solutionCount = 0;
 
 #define LIES_IN_MAINSQUARE(X,Y) (((X) < areaSize) && ((Y) < areaSize))
 
+//symmetries of a square
+//rotate 90 degrees
+#define SYMM1_X(X,Y) (Y)
+#define SYMM1_Y(X,Y) (areaSize - (X) - 1)
+
+//rotate 180 degrees
+#define SYMM2_X(X,Y) (areaSize - (X) - 1)
+#define SYMM2_Y(X,Y) (areaSize - (Y) - 1)
+
+//rotate 270 degrees
+#define SYMM3_X(X,Y) (areaSize - (Y) - 1)
+#define SYMM3_Y(X,Y) (X)
+
+//reflect horizontally
+#define SYMM4_X(X,Y) (areaSize - (X) - 1)
+#define SYMM4_Y(X,Y) (Y)
+
+//reflect vertically
+#define SYMM5_X(X,Y) (X)
+#define SYMM5_Y(X,Y) (areaSize - (Y) - 1)
+
+//reflect diagonally 1
+#define SYMM6_X(X,Y) (Y)
+#define SYMM6_Y(X,Y) (X)
+
+//reflect diagonally 2
+#define SYMM7_X(X,Y) (areaSize - (Y) - 1)
+#define SYMM7_Y(X,Y) (areaSize - (X) - 1)
+
 //=============================EXPORT======================================
 
 void printSquare(FILE *f){
