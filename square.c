@@ -63,6 +63,50 @@ void printSquare(FILE *f){
     fprintf(f, "\n");
 }
 
+void tikzSquare(FILE *f){
+    int i, j;
+    
+    fprintf(f, "\\begin{tikzpicture}["
+                             "yscale=-1,"
+                             "s1/.style={red},"
+                             "s2/.style={green},"
+                             "s3/.style={blue},"
+                             "s4/.style={yellow},"
+                             "s5/.style={cyan},"
+                             "s6/.style={magenta}"
+                "]\n\n");
+    
+    fprintf(f, "\\fill[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
+            SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0));
+    
+    for(i = 1; i < areaSize; i++){
+        if(SQUARE(i,0) != SQUARE(i-1,0)){
+            fprintf(f, "\\fill[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
+            SQUARE(i,0), i, i + SQUARE(i,0), i + SQUARE(i,0), SQUARE(i,0), i, SQUARE(i,0), i);
+        }
+    }
+    
+    for(i = 1; i < areaSize; i++){
+        if(SQUARE(0,i) != SQUARE(0, i-1)){
+            fprintf(f, "\\fill[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
+            SQUARE(0,i), i, SQUARE(0,i), i, SQUARE(0,i), i + SQUARE(0,i), i + SQUARE(0, i), i);
+        }
+        for(j = 1; j < areaSize; j++){
+            if((SQUARE(j,i) != SQUARE(j, i-1)) && (SQUARE(j,i) != SQUARE(j-1, i))){
+                fprintf(f, "\\fill[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
+                        SQUARE(j,i),
+                        j, i,
+                        j + SQUARE(j,i), i,
+                        j + SQUARE(j,i), i + SQUARE(j, i),
+                        j, i + SQUARE(j, i),
+                        j, i);
+            }
+        }
+    }
+    
+    fprintf(f, "\n\\end{tikzpicture}\n");
+}
+
 void handleFinishedSquare(){
     solutionCount++;
     printSquare(stderr);
