@@ -27,6 +27,8 @@ typedef int boolean;
 boolean tikzOutput = FALSE;
 FILE *tikzOutputFile = NULL;
 
+boolean skipCanonicityCheck = FALSE;
+
 typedef unsigned char size;
 #define MAX_SIZE 100
 
@@ -253,7 +255,7 @@ boolean checkCanonicity(){
 }
 
 void handleFinishedSquare(){
-    if(!checkCanonicity()){
+    if(!skipCanonicityCheck && !checkCanonicity()){
         return;
     }
     solutionCount++;
@@ -346,6 +348,8 @@ void help(char *name) {
     fprintf(stderr, "Valid options\n=============\n");
     fprintf(stderr, "    -t, --tikz\n");
     fprintf(stderr, "       Write a tikzpicture for each solution to stdout.\n");
+    fprintf(stderr, "    -s, --skip\n");
+    fprintf(stderr, "       Skip canonicity check (some solutions might be counted several times).\n");
     fprintf(stderr, "    -h, --help\n");
     fprintf(stderr, "       Print this help and return.\n");
 }
@@ -363,14 +367,18 @@ int main(int argc, char *argv[]) {
     char *name = argv[0];
     static struct option long_options[] = {
          {"tikz", no_argument, NULL, 't'},
+         {"skip", no_argument, NULL, 's'},
          {"help", no_argument, NULL, 'h'}
     };
     int option_index = 0;
 
-    while ((c = getopt_long(argc, argv, "ht", long_options, &option_index)) != -1) {
+    while ((c = getopt_long(argc, argv, "hts", long_options, &option_index)) != -1) {
         switch (c) {
             case 't':
                 tikzOutput = TRUE;
+                break;
+            case 's':
+                skipCanonicityCheck = TRUE;
                 break;
             case 'h':
                 help(name);
