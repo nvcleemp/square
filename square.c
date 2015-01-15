@@ -68,6 +68,46 @@ void handleFinishedSquare(){
     printSquare(stderr);
 }
 
+void addNextSquare(int lastX, int lastY){
+    //first we look for the next free position
+    int x, y;
+    x = lastX;
+    y = lastY;
+    while(x < areaSize && SQUARE(x,y)){
+        x++;
+    }
+    if(x == areaSize){
+        for(y = lastY + 1; y < areaSize; y++){
+            x = 0;
+            while(x < areaSize && SQUARE(x,y)){
+                x++;
+            }
+            if(x < areaSize){
+                break;
+            }
+        }
+    }
+    
+    if(x == areaSize && y == areaSize){
+        //square is completely filled
+        handleFinishedSquare();
+        return;
+    }
+    
+    size minSize = 1, maxSize = 0;
+    
+    while(maxSize < 6 && LIES_IN_MAINSQUARE(x + maxSize, y + maxSize) &&
+            (!SQUARE(x + maxSize, y))){
+        maxSize++;
+    }
+    
+    size s;
+    for(s = minSize; s <= maxSize; s++){
+        SET_SQUARE(x, y, s);
+        addNextSquare(x, y);
+        UNSET_SQUARE(x, y, s);
+    }
+}
 //==============================USAGE======================================
 
 void help(char *name) {
@@ -121,6 +161,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Squares of that size are not supported.\n");
         return EXIT_FAILURE;
     }
+    
+    addNextSquare(0,0);
     
     fprintf(stderr, "Found %d solution%s.\n", 
             solutionCount, solutionCount == 1 ? "" : "s");
