@@ -30,6 +30,8 @@ typedef unsigned char size;
 size areaSize;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 
+#define SQUARE(X,Y) (grid[Y][X])
+
 #define SET_SQUARE(X,Y,S) {int local_i, local_j; \
                            for(local_i = (X); local_i < (X) + (S); local_i++)\
                                for(local_j = (Y); local_j < (Y) + (S); local_j++)\
@@ -41,6 +43,10 @@ size grid[MAX_SIZE][MAX_SIZE] = {{0}};
                                  for(local_j = (Y); local_j < (Y) + (S); local_j++)\
                                      grid[local_j][local_i] = 0;\
                             }
+
+#define LIES_IN_SQUARE(SX,SY,S,X,Y) (((X) >= (SX)) && ((Y) >= (SY)) && ((X) < (SX + S)) && ((Y) < (SY + S)))
+
+#define LIES_IN_MAINSQUARE(X,Y) (((X) < areaSize) && ((Y) < areaSize))
 
 //=============================EXPORT======================================
 
