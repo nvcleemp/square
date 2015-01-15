@@ -24,6 +24,9 @@ typedef int boolean;
 #define FALSE 0
 #define TRUE  1
 
+boolean tikzOutput = FALSE;
+FILE *tikzOutputFile = NULL;
+
 typedef unsigned char size;
 #define MAX_SIZE 100
 
@@ -115,6 +118,9 @@ void tikzSquare(FILE *f){
 void handleFinishedSquare(){
     solutionCount++;
     printSquare(stderr);
+    if(tikzOutput){
+        tikzSquare(tikzOutputFile);
+    }
 }
 
 void addNextSquare(int lastX, int lastY){
@@ -214,12 +220,16 @@ int main(int argc, char *argv[]) {
     int c;
     char *name = argv[0];
     static struct option long_options[] = {
+         {"tikz", no_argument, NULL, 't'},
          {"help", no_argument, NULL, 'h'}
     };
     int option_index = 0;
 
-    while ((c = getopt_long(argc, argv, "h", long_options, &option_index)) != -1) {
+    while ((c = getopt_long(argc, argv, "ht", long_options, &option_index)) != -1) {
         switch (c) {
+            case 't':
+                tikzOutput = TRUE;
+                break;
             case 'h':
                 help(name);
                 return EXIT_SUCCESS;
@@ -231,6 +241,11 @@ int main(int argc, char *argv[]) {
                 usage(name);
                 return EXIT_FAILURE;
         }
+    }
+    
+    if(tikzOutputFile == NULL){
+        // default to stdout
+        tikzOutputFile = stdout;
     }
     
     if(argc - optind != 1){
