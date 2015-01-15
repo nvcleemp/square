@@ -30,6 +30,8 @@ typedef unsigned char size;
 size areaSize;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 
+unsigned int solutionCount = 0;
+
 #define SQUARE(X,Y) (grid[Y][X])
 
 #define SET_SQUARE(X,Y,S) {int local_i, local_j; \
@@ -60,6 +62,12 @@ void printSquare(FILE *f){
     }
     fprintf(f, "\n");
 }
+
+void handleFinishedSquare(){
+    solutionCount++;
+    printSquare(stderr);
+}
+
 //==============================USAGE======================================
 
 void help(char *name) {
@@ -113,6 +121,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Squares of that size are not supported.\n");
         return EXIT_FAILURE;
     }
+    
+    fprintf(stderr, "Found %d solution%s.\n", 
+            solutionCount, solutionCount == 1 ? "" : "s");
     
     return EXIT_SUCCESS;
 }
