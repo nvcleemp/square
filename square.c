@@ -144,7 +144,118 @@ void tikzSquare(FILE *f){
     fprintf(f, "\n\\end{tikzpicture}\n");
 }
 
+boolean checkCanonicity_symm1(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm2(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm3(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm4(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm5(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm6(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity_symm7(){
+    int x, y;
+    for(y = 0; y < areaSize; y++){
+        for(x = 0; x < areaSize; x++){
+            if(SQUARE(x,y) < SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
+                return TRUE;
+            } else if(SQUARE(x,y) > SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+boolean checkCanonicity(){
+    return checkCanonicity_symm1() &&
+            checkCanonicity_symm2() &&
+            checkCanonicity_symm3() &&
+            checkCanonicity_symm4() &&
+            checkCanonicity_symm5() &&
+            checkCanonicity_symm6() &&
+            checkCanonicity_symm7();
+}
+
 void handleFinishedSquare(){
+    if(!checkCanonicity()){
+        return;
+    }
     solutionCount++;
     printSquare(stderr);
     if(tikzOutput){
