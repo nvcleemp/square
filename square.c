@@ -94,7 +94,22 @@ void addNextSquare(int lastX, int lastY){
         return;
     }
     
+    if(areaSize - x < 3 || areaSize - y < 3){
+        //no squares of size 1 or 2 in the outer 3 layers
+        return;
+    }
+    
     size minSize = 1, maxSize = 0;
+    
+    if(x < 3 || y < 3) {
+        //no squares of size 1 or 2 in the outer 3 layers
+        minSize = 3;
+        
+        if(x == 0 && y == 0){
+            //no square of size 3 in the corners
+            minSize = 4;
+        }
+    }
     
     while(maxSize < 6 && LIES_IN_MAINSQUARE(x + maxSize, y + maxSize) &&
             (!SQUARE(x + maxSize, y))){
