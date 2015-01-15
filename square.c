@@ -78,11 +78,13 @@ void tikzSquare(FILE *f){
     
     fprintf(f, "\\fill[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
             SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0));
+    fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,0)/2.0, SQUARE(0,0)/2.0, SQUARE(0,0));
     
     for(i = 1; i < areaSize; i++){
         if(SQUARE(i,0) != SQUARE(i-1,0)){
             fprintf(f, "\\fill[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
             SQUARE(i,0), i, i + SQUARE(i,0), i + SQUARE(i,0), SQUARE(i,0), i, SQUARE(i,0), i);
+            fprintf(f, "\\node at (%f, %f) {%d};\n", i + SQUARE(i,0)/2.0, SQUARE(i,0)/2.0, SQUARE(i,0));
         }
     }
     
@@ -90,6 +92,7 @@ void tikzSquare(FILE *f){
         if(SQUARE(0,i) != SQUARE(0, i-1)){
             fprintf(f, "\\fill[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
             SQUARE(0,i), i, SQUARE(0,i), i, SQUARE(0,i), i + SQUARE(0,i), i + SQUARE(0, i), i);
+            fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,i)/2.0, i + SQUARE(0,i)/2.0, SQUARE(0,i));
         }
         for(j = 1; j < areaSize; j++){
             if((SQUARE(j,i) != SQUARE(j, i-1)) && (SQUARE(j,i) != SQUARE(j-1, i))){
@@ -100,6 +103,8 @@ void tikzSquare(FILE *f){
                         j + SQUARE(j,i), i + SQUARE(j, i),
                         j, i + SQUARE(j, i),
                         j, i);
+                fprintf(f, "\\node at (%f, %f) {%d};\n", 
+                        j + SQUARE(j,i)/2.0, i + SQUARE(j,i)/2.0, SQUARE(j,i));
             }
         }
     }
