@@ -88,7 +88,7 @@ unsigned int solutionCount = 0;
 
 //=============================EXPORT======================================
 
-void printSquare(FILE *f){
+void printRectangle(FILE *f){
     int i, j;
     for(i = 0; i < areaHeight; i++){
         for(j = 0; j < areaWidth; j++){
@@ -99,7 +99,7 @@ void printSquare(FILE *f){
     fprintf(f, "\n");
 }
 
-void tikzSquare(FILE *f){
+void tikzImageRectangle(FILE *f){
     int i, j;
     
     fprintf(f, "\\begin{tikzpicture}["
@@ -269,9 +269,9 @@ void handleFinishedSquare(){
         return;
     }
     solutionCount++;
-    printSquare(stderr);
+    printRectangle(stderr);
     if(tikzOutput){
-        tikzSquare(tikzOutputFile);
+        tikzImageRectangle(tikzOutputFile);
     }
 }
 
