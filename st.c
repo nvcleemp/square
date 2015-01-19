@@ -33,7 +33,8 @@ boolean skipCanonicityCheck = FALSE;
 typedef unsigned char size;
 #define MAX_SIZE 100
 
-size areaSize;
+size areaWidth;
+size areaHeight;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 
 unsigned int solutionCount = 0;
@@ -54,43 +55,43 @@ unsigned int solutionCount = 0;
 
 #define LIES_IN_SQUARE(SX,SY,S,X,Y) (((X) >= (SX)) && ((Y) >= (SY)) && ((X) < (SX + S)) && ((Y) < (SY + S)))
 
-#define LIES_IN_MAINSQUARE(X,Y) (((X) < areaSize) && ((Y) < areaSize))
+#define LIES_IN_MAINSQUARE(X,Y) (((X) < areaWidth) && ((Y) < areaHeight))
 
 //symmetries of a square
 //rotate 90 degrees
 #define SYMM1_X(X,Y) (Y)
-#define SYMM1_Y(X,Y) (areaSize - (X) - 1)
+#define SYMM1_Y(X,Y) (areaWidth - (X) - 1)
 
 //rotate 180 degrees
-#define SYMM2_X(X,Y) (areaSize - (X) - 1)
-#define SYMM2_Y(X,Y) (areaSize - (Y) - 1)
+#define SYMM2_X(X,Y) (areaWidth - (X) - 1)
+#define SYMM2_Y(X,Y) (areaHeight - (Y) - 1)
 
 //rotate 270 degrees
-#define SYMM3_X(X,Y) (areaSize - (Y) - 1)
+#define SYMM3_X(X,Y) (areaWidth - (Y) - 1)
 #define SYMM3_Y(X,Y) (X)
 
 //reflect horizontally
-#define SYMM4_X(X,Y) (areaSize - (X) - 1)
+#define SYMM4_X(X,Y) (areaWidth - (X) - 1)
 #define SYMM4_Y(X,Y) (Y)
 
 //reflect vertically
 #define SYMM5_X(X,Y) (X)
-#define SYMM5_Y(X,Y) (areaSize - (Y) - 1)
+#define SYMM5_Y(X,Y) (areaHeight - (Y) - 1)
 
 //reflect diagonally 1
 #define SYMM6_X(X,Y) (Y)
 #define SYMM6_Y(X,Y) (X)
 
 //reflect diagonally 2
-#define SYMM7_X(X,Y) (areaSize - (Y) - 1)
-#define SYMM7_Y(X,Y) (areaSize - (X) - 1)
+#define SYMM7_X(X,Y) (areaWidth - (Y) - 1)
+#define SYMM7_Y(X,Y) (areaWidth - (X) - 1)
 
 //=============================EXPORT======================================
 
 void printSquare(FILE *f){
     int i, j;
-    for(i = 0; i < areaSize; i++){
-        for(j = 0; j < areaSize; j++){
+    for(i = 0; i < areaHeight; i++){
+        for(j = 0; j < areaWidth; j++){
             fprintf(f, "%d", grid[i][j]);
         }
         fprintf(f, "\n");
@@ -115,7 +116,7 @@ void tikzSquare(FILE *f){
             SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0));
     fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,0)/2.0, SQUARE(0,0)/2.0, SQUARE(0,0));
     
-    for(i = 1; i < areaSize; i++){
+    for(i = 1; i < areaWidth; i++){
         if(SQUARE(i,0) != SQUARE(i-1,0)){
             fprintf(f, "\\fill[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
             SQUARE(i,0), i, i + SQUARE(i,0), i + SQUARE(i,0), SQUARE(i,0), i, SQUARE(i,0), i);
@@ -123,13 +124,13 @@ void tikzSquare(FILE *f){
         }
     }
     
-    for(i = 1; i < areaSize; i++){
+    for(i = 1; i < areaHeight; i++){
         if(SQUARE(0,i) != SQUARE(0, i-1)){
             fprintf(f, "\\fill[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
             SQUARE(0,i), i, SQUARE(0,i), i, SQUARE(0,i), i + SQUARE(0,i), i + SQUARE(0, i), i);
             fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,i)/2.0, i + SQUARE(0,i)/2.0, SQUARE(0,i));
         }
-        for(j = 1; j < areaSize; j++){
+        for(j = 1; j < areaWidth; j++){
             if((SQUARE(j,i) != SQUARE(j, i-1)) && (SQUARE(j,i) != SQUARE(j-1, i))){
                 fprintf(f, "\\fill[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
                         SQUARE(j,i),
@@ -149,8 +150,8 @@ void tikzSquare(FILE *f){
 
 boolean checkCanonicity_symm1(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
@@ -163,8 +164,8 @@ boolean checkCanonicity_symm1(){
 
 boolean checkCanonicity_symm2(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
@@ -177,8 +178,8 @@ boolean checkCanonicity_symm2(){
 
 boolean checkCanonicity_symm3(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
@@ -191,8 +192,8 @@ boolean checkCanonicity_symm3(){
 
 boolean checkCanonicity_symm4(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
@@ -205,8 +206,8 @@ boolean checkCanonicity_symm4(){
 
 boolean checkCanonicity_symm5(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
@@ -219,8 +220,8 @@ boolean checkCanonicity_symm5(){
 
 boolean checkCanonicity_symm6(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
@@ -233,8 +234,8 @@ boolean checkCanonicity_symm6(){
 
 boolean checkCanonicity_symm7(){
     int x, y;
-    for(y = 0; y < areaSize; y++){
-        for(x = 0; x < areaSize; x++){
+    for(y = 0; y < areaHeight; y++){
+        for(x = 0; x < areaWidth; x++){
             if(SQUARE(x,y) < SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
                 return TRUE;
             } else if(SQUARE(x,y) > SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
@@ -246,13 +247,21 @@ boolean checkCanonicity_symm7(){
 }
 
 boolean checkCanonicity(){
-    return checkCanonicity_symm1() &&
-            checkCanonicity_symm2() &&
-            checkCanonicity_symm3() &&
-            checkCanonicity_symm4() &&
-            checkCanonicity_symm5() &&
-            checkCanonicity_symm6() &&
-            checkCanonicity_symm7();
+    if(areaWidth == areaHeight){
+        //check all symmetries of a square
+        return checkCanonicity_symm1() &&
+                checkCanonicity_symm2() &&
+                checkCanonicity_symm3() &&
+                checkCanonicity_symm4() &&
+                checkCanonicity_symm5() &&
+                checkCanonicity_symm6() &&
+                checkCanonicity_symm7();
+    } else {
+        //check all symmetries of a rectangle
+        return checkCanonicity_symm2() &&
+                checkCanonicity_symm4() &&
+                checkCanonicity_symm5();
+    }
 }
 
 void handleFinishedSquare(){
@@ -271,16 +280,16 @@ void addNextSquare(int lastX, int lastY){
     int x, y;
     x = lastX;
     y = lastY;
-    while(x < areaSize && SQUARE(x,y)){
+    while(x < areaWidth && SQUARE(x,y)){
         x++;
     }
-    if(x == areaSize){
-        for(y = lastY + 1; y < areaSize; y++){
+    if(x == areaWidth){
+        for(y = lastY + 1; y < areaHeight; y++){
             x = 0;
-            while(x < areaSize && SQUARE(x,y)){
+            while(x < areaWidth && SQUARE(x,y)){
                 x++;
             }
-            if(x < areaSize){
+            if(x < areaWidth){
                 break;
             }
         }
@@ -290,22 +299,22 @@ void addNextSquare(int lastX, int lastY){
         //when we finish the first row, we then
         //check that the first row is canonical
         int i = 0;
-        while(i < areaSize && SQUARE(i, 0) == SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+        while(i < areaWidth && SQUARE(i, 0) == SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
             i++;
         }
-        if(i < areaSize && SQUARE(i, 0) > SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+        if(i < areaWidth && SQUARE(i, 0) > SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
             //the first row was not canonical
             return;
         }
     }
     
-    if(x == areaSize && y == areaSize){
+    if(x == areaWidth && y == areaHeight){
         //square is completely filled
         handleFinishedSquare();
         return;
     }
     
-    if(areaSize - x < 3 || areaSize - y < 3){
+    if(areaWidth - x < 3 || areaHeight - y < 3){
         //no squares of size 1 or 2 in the outer 3 layers
         return;
     }
@@ -343,7 +352,7 @@ void addNextSquare(int lastX, int lastY){
                 continue;
             }
         }
-        if(x + s + 1 < areaSize){
+        if(x + s + 1 < areaWidth){
             if(SQUARE(x + s + 1, y) == s){
                 continue;
             }
@@ -412,14 +421,22 @@ int main(int argc, char *argv[]) {
         tikzOutputFile = stdout;
     }
     
-    if(argc - optind != 1){
+    if(argc - optind == 0 || argc - optind > 2){
         fprintf(stderr, "Illegal number of arguments.\n");
         usage(name);
         return EXIT_FAILURE;
+    } else if (argc - optind == 1){
+        areaWidth = areaHeight = (size)atoi(argv[optind]);
+    } else {
+        areaWidth = (size)atoi(argv[optind]);
+        areaHeight = (size)atoi(argv[optind + 1]);
+        if(areaHeight < areaWidth){
+            size temp = areaHeight;
+            areaHeight = areaWidth;
+            areaWidth = temp;
+        }
     }
-    
-    areaSize = (size)atoi(argv[optind]);
-    if(areaSize > MAX_SIZE){
+    if(areaWidth > MAX_SIZE || areaHeight > MAX_SIZE){
         fprintf(stderr, "Squares of that size are not supported.\n");
         return EXIT_FAILURE;
     }
