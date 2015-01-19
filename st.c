@@ -275,7 +275,7 @@ void handleFinishedSquare(){
     }
 }
 
-void addNextSquare(int lastX, int lastY){
+void addNextNoTouchSquare(int lastX, int lastY){
     //first we look for the next free position
     int x, y;
     x = lastX;
@@ -358,7 +358,7 @@ void addNextSquare(int lastX, int lastY){
             }
         }
         SET_SQUARE(x, y, s);
-        addNextSquare(x, y);
+        addNextNoTouchSquare(x, y);
         UNSET_SQUARE(x, y, s);
     }
 }
@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
     
-    addNextSquare(0,0);
+    addNextNoTouchSquare(0,0);
     
     fprintf(stderr, "Found %d solution%s.\n", 
             solutionCount, solutionCount == 1 ? "" : "s");
