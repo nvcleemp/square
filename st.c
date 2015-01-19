@@ -39,7 +39,7 @@ size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 
 unsigned int solutionCount = 0;
 
-#define SQUARE(X,Y) (grid[Y][X])
+#define GRID_VALUE(X,Y) (grid[Y][X])
 
 #define SET_SQUARE(X,Y,S) {int local_i, local_j; \
                            for(local_i = (X); local_i < (X) + (S); local_i++)\
@@ -55,7 +55,7 @@ unsigned int solutionCount = 0;
 
 #define LIES_IN_SQUARE(SX,SY,S,X,Y) (((X) >= (SX)) && ((Y) >= (SY)) && ((X) < (SX + S)) && ((Y) < (SY + S)))
 
-#define LIES_IN_MAINSQUARE(X,Y) (((X) < areaWidth) && ((Y) < areaHeight))
+#define LIES_IN_MAIN_AREA(X,Y) (((X) < areaWidth) && ((Y) < areaHeight))
 
 //symmetries of a square
 //rotate 90 degrees
@@ -113,34 +113,34 @@ void tikzSquare(FILE *f){
                 "]\n\n");
     
     fprintf(f, "\\fill[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
-            SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0), SQUARE(0,0));
-    fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,0)/2.0, SQUARE(0,0)/2.0, SQUARE(0,0));
+            GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
+    fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0));
     
     for(i = 1; i < areaWidth; i++){
-        if(SQUARE(i,0) != SQUARE(i-1,0)){
+        if(GRID_VALUE(i,0) != GRID_VALUE(i-1,0)){
             fprintf(f, "\\fill[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
-            SQUARE(i,0), i, i + SQUARE(i,0), i + SQUARE(i,0), SQUARE(i,0), i, SQUARE(i,0), i);
-            fprintf(f, "\\node at (%f, %f) {%d};\n", i + SQUARE(i,0)/2.0, SQUARE(i,0)/2.0, SQUARE(i,0));
+            GRID_VALUE(i,0), i, i + GRID_VALUE(i,0), i + GRID_VALUE(i,0), GRID_VALUE(i,0), i, GRID_VALUE(i,0), i);
+            fprintf(f, "\\node at (%f, %f) {%d};\n", i + GRID_VALUE(i,0)/2.0, GRID_VALUE(i,0)/2.0, GRID_VALUE(i,0));
         }
     }
     
     for(i = 1; i < areaHeight; i++){
-        if(SQUARE(0,i) != SQUARE(0, i-1)){
+        if(GRID_VALUE(0,i) != GRID_VALUE(0, i-1)){
             fprintf(f, "\\fill[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
-            SQUARE(0,i), i, SQUARE(0,i), i, SQUARE(0,i), i + SQUARE(0,i), i + SQUARE(0, i), i);
-            fprintf(f, "\\node at (%f, %f) {%d};\n", SQUARE(0,i)/2.0, i + SQUARE(0,i)/2.0, SQUARE(0,i));
+            GRID_VALUE(0,i), i, GRID_VALUE(0,i), i, GRID_VALUE(0,i), i + GRID_VALUE(0,i), i + GRID_VALUE(0, i), i);
+            fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,i)/2.0, i + GRID_VALUE(0,i)/2.0, GRID_VALUE(0,i));
         }
         for(j = 1; j < areaWidth; j++){
-            if((SQUARE(j,i) != SQUARE(j, i-1)) && (SQUARE(j,i) != SQUARE(j-1, i))){
+            if((GRID_VALUE(j,i) != GRID_VALUE(j, i-1)) && (GRID_VALUE(j,i) != GRID_VALUE(j-1, i))){
                 fprintf(f, "\\fill[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
-                        SQUARE(j,i),
+                        GRID_VALUE(j,i),
                         j, i,
-                        j + SQUARE(j,i), i,
-                        j + SQUARE(j,i), i + SQUARE(j, i),
-                        j, i + SQUARE(j, i),
+                        j + GRID_VALUE(j,i), i,
+                        j + GRID_VALUE(j,i), i + GRID_VALUE(j, i),
+                        j, i + GRID_VALUE(j, i),
                         j, i);
                 fprintf(f, "\\node at (%f, %f) {%d};\n", 
-                        j + SQUARE(j,i)/2.0, i + SQUARE(j,i)/2.0, SQUARE(j,i));
+                        j + GRID_VALUE(j,i)/2.0, i + GRID_VALUE(j,i)/2.0, GRID_VALUE(j,i));
             }
         }
     }
@@ -152,9 +152,9 @@ boolean checkCanonicity_symm1(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM1_X(x,y), SYMM1_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM1_X(x,y), SYMM1_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM1_X(x,y), SYMM1_Y(x,y))){
                 return FALSE;
             }
         }
@@ -166,9 +166,9 @@ boolean checkCanonicity_symm2(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM2_X(x,y), SYMM2_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM2_X(x,y), SYMM2_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM2_X(x,y), SYMM2_Y(x,y))){
                 return FALSE;
             }
         }
@@ -180,9 +180,9 @@ boolean checkCanonicity_symm3(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM3_X(x,y), SYMM3_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM3_X(x,y), SYMM3_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM3_X(x,y), SYMM3_Y(x,y))){
                 return FALSE;
             }
         }
@@ -194,9 +194,9 @@ boolean checkCanonicity_symm4(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM4_X(x,y), SYMM4_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM4_X(x,y), SYMM4_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM4_X(x,y), SYMM4_Y(x,y))){
                 return FALSE;
             }
         }
@@ -208,9 +208,9 @@ boolean checkCanonicity_symm5(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM5_X(x,y), SYMM5_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM5_X(x,y), SYMM5_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM5_X(x,y), SYMM5_Y(x,y))){
                 return FALSE;
             }
         }
@@ -222,9 +222,9 @@ boolean checkCanonicity_symm6(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM6_X(x,y), SYMM6_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM6_X(x,y), SYMM6_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM6_X(x,y), SYMM6_Y(x,y))){
                 return FALSE;
             }
         }
@@ -236,9 +236,9 @@ boolean checkCanonicity_symm7(){
     int x, y;
     for(y = 0; y < areaHeight; y++){
         for(x = 0; x < areaWidth; x++){
-            if(SQUARE(x,y) < SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
+            if(GRID_VALUE(x,y) < GRID_VALUE(SYMM7_X(x,y), SYMM7_Y(x,y))){
                 return TRUE;
-            } else if(SQUARE(x,y) > SQUARE(SYMM7_X(x,y), SYMM7_Y(x,y))){
+            } else if(GRID_VALUE(x,y) > GRID_VALUE(SYMM7_X(x,y), SYMM7_Y(x,y))){
                 return FALSE;
             }
         }
@@ -280,13 +280,13 @@ void addNextSquare(int lastX, int lastY){
     int x, y;
     x = lastX;
     y = lastY;
-    while(x < areaWidth && SQUARE(x,y)){
+    while(x < areaWidth && GRID_VALUE(x,y)){
         x++;
     }
     if(x == areaWidth){
         for(y = lastY + 1; y < areaHeight; y++){
             x = 0;
-            while(x < areaWidth && SQUARE(x,y)){
+            while(x < areaWidth && GRID_VALUE(x,y)){
                 x++;
             }
             if(x < areaWidth){
@@ -299,10 +299,10 @@ void addNextSquare(int lastX, int lastY){
         //when we finish the first row, we then
         //check that the first row is canonical
         int i = 0;
-        while(i < areaWidth && SQUARE(i, 0) == SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+        while(i < areaWidth && GRID_VALUE(i, 0) == GRID_VALUE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
             i++;
         }
-        if(i < areaWidth && SQUARE(i, 0) > SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+        if(i < areaWidth && GRID_VALUE(i, 0) > GRID_VALUE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
             //the first row was not canonical
             return;
         }
@@ -331,8 +331,8 @@ void addNextSquare(int lastX, int lastY){
         }
     }
     
-    while(maxSize < 6 && LIES_IN_MAINSQUARE(x + maxSize, y + maxSize) &&
-            (!SQUARE(x + maxSize, y))){
+    while(maxSize < 6 && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
+            (!GRID_VALUE(x + maxSize, y))){
         maxSize++;
     }
     
@@ -340,7 +340,7 @@ void addNextSquare(int lastX, int lastY){
     for(s = minSize; s <= maxSize; s++){
         if(y - 1 >= 0){
             int i = 0;
-            while(i < s && SQUARE(x + i, y - 1) != s) {
+            while(i < s && GRID_VALUE(x + i, y - 1) != s) {
                 i++;
             }
             if(i < s){
@@ -348,12 +348,12 @@ void addNextSquare(int lastX, int lastY){
             }
         }
         if(x - 1 >= 0){
-            if(SQUARE(x - 1, y) == s){
+            if(GRID_VALUE(x - 1, y) == s){
                 continue;
             }
         }
         if(x + s + 1 < areaWidth){
-            if(SQUARE(x + s + 1, y) == s){
+            if(GRID_VALUE(x + s + 1, y) == s){
                 continue;
             }
         }
