@@ -1,23 +1,23 @@
 
-SOURCES = square.c\
+SOURCES = st.c\
           Makefile COPYRIGHT.txt LICENSE.txt README.md
 
-all: build/square
+all: build/st
 
 clean:
 	rm -rf build
 	rm -rf dist
 
-build/square: square.c
+build/st: st.c
 	mkdir -p build
 	cc -o $@ -O4 -Wall $^
 
-sources: dist/square-sources.zip dist/square-sources.tar.gz
+sources: dist/st-sources.zip dist/st-sources.tar.gz
 
-dist/square-sources.zip: $(SOURCES)
+dist/st-sources.zip: $(SOURCES)
 	mkdir -p dist
-	zip dist/square-sources $(SOURCES)
+	zip dist/st-sources $(SOURCES)
 
-dist/square-sources.tar.gz: $(SOURCES)
+dist/st-sources.tar.gz: $(SOURCES)
 	mkdir -p dist
-	tar czf dist/square-sources.tar.gz $(SOURCES)
+	tar czf dist/st-sources.tar.gz $(SOURCES)
