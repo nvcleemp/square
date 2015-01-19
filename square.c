@@ -285,6 +285,19 @@ void addNextSquare(int lastX, int lastY){
         }
     }
     
+    if(lastY == 0 && y > 0) {
+        //when we finish the first row, we then
+        //check that the first row is canonical
+        int i = 0;
+        while(i < areaSize && SQUARE(i, 0) == SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+            i++;
+        }
+        if(i < areaSize && SQUARE(i, 0) > SQUARE(SYMM4_X(i, 0), SYMM4_Y(i, 0))){
+            //the first row was not canonical
+            return;
+        }
+    }
+    
     if(x == areaSize && y == areaSize){
         //square is completely filled
         handleFinishedSquare();
