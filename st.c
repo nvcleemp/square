@@ -5,12 +5,13 @@
  * Licensed under the GNU GPL, read the file LICENSE.txt for details.
  */
 
-/* This program constructs no-touch squarings of a given square. 
+/* This program constructs no-touch or nowhere-neat square tilings of a given
+ * rectangle. 
  * 
  * 
  * Compile with:
  *     
- *     cc -o square -O4 square.c
+ *     cc -o st -O4 st.c
  * 
  */
 
