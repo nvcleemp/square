@@ -67,17 +67,19 @@ unsigned int solutionCount = 0;
 #define UPPERRIGHT 3
 #define LOWERRIGHT 4
 #define IS_UPPERLEFT_CORNER(X,Y) (corners[Y][X]==UPPERLEFT)
+#define IS_LOWERLEFT_CORNER(X,Y) (corners[Y][X]==LOWERLEFT)
+#define IS_UPPERRIGHT_CORNER(X,Y) (corners[Y][X]==UPPERRIGHT)
 #define SET_SQUARE_CORNERS(X,Y,S) SET_SQUARE(X,Y,S)\
                                   corners[Y][X] = UPPERLEFT;\
-                                  corners[Y][X + (S)] = UPPERRIGHT;\
-                                  corners[Y + (S)][X] = LOWERLEFT;\
-                                  corners[Y + (S)][X + (S)] = LOWERRIGHT;
+                                  corners[Y][X + (S) - 1] = UPPERRIGHT;\
+                                  corners[Y + (S) - 1][X] = LOWERLEFT;\
+                                  corners[Y + (S) - 1][X + (S) - 1] = LOWERRIGHT;
 
 #define UNSET_SQUARE_CORNERS(X,Y,S) UNSET_SQUARE(X,Y,S)\
                                   corners[Y][X] = 0;\
-                                  corners[Y][X + (S)] = 0;\
-                                  corners[Y + (S)][X] = 0;\
-                                  corners[Y + (S)][X + (S)] = 0;
+                                  corners[Y][X + (S) - 1] = 0;\
+                                  corners[Y + (S) - 1][X] = 0;\
+                                  corners[Y + (S) - 1][X + (S) - 1] = 0;
 
 #define LIES_IN_SQUARE(SX,SY,S,X,Y) (((X) >= (SX)) && ((Y) >= (SY)) && ((X) < (SX + S)) && ((Y) < (SY + S)))
 
@@ -318,14 +320,69 @@ boolean checkCanonicity(){
     }
 }
 
-void handleFinishedSquare(){
+void handleFinishedSquare(boolean noTouch){
     if(!skipCanonicityCheck && !checkCanonicity()){
         return;
     }
     solutionCount++;
     printRectangle(stderr);
     if(tikzOutput){
-        tikzImageRectangle(tikzOutputFile);
+        if(noTouch){
+            tikzImageRectangle(tikzOutputFile);
+        } else {
+            tikzImageRectangleCorners(tikzOutputFile);
+        }
+    }
+}
+
+void addNextNowhereNeatSquare(int lastX, int lastY){
+    //first we look for the next free position
+    int x, y;
+    x = lastX;
+    y = lastY;
+    while(x < areaWidth && GRID_VALUE(x,y)){
+        x++;
+    }
+    if(x == areaWidth){
+        for(y = lastY + 1; y < areaHeight; y++){
+            x = 0;
+            while(x < areaWidth && GRID_VALUE(x,y)){
+                x++;
+            }
+            if(x < areaWidth){
+                break;
+            }
+        }
+    }
+    
+    if(x == areaWidth && y == areaHeight){
+        //square is completely filled
+        handleFinishedSquare(FALSE);
+        return;
+    }
+    
+    size minSize = 1, maxSize = 0;
+    
+    while(maxSize < 6 && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
+            (!GRID_VALUE(x + maxSize, y))){
+        maxSize++;
+    }
+    
+    size s;
+    for(s = minSize; s <= maxSize; s++){
+        if(y - 1 >= 0){
+            if(GRID_VALUE(x, y - 1) == s && (s == 1 || IS_LOWERLEFT_CORNER(x, y-1))){
+                continue;
+            }
+        }
+        if(x - 1 >= 0){
+            if(GRID_VALUE(x - 1, y) == s && (s == 1 || IS_UPPERRIGHT_CORNER(x - 1, y))){
+                continue;
+            }
+        }
+        SET_SQUARE_CORNERS(x, y, s);
+        addNextNowhereNeatSquare(x, y);
+        UNSET_SQUARE_CORNERS(x, y, s);
     }
 }
 
@@ -364,7 +421,7 @@ void addNextNoTouchSquare(int lastX, int lastY){
     
     if(x == areaWidth && y == areaHeight){
         //square is completely filled
-        handleFinishedSquare();
+        handleFinishedSquare(TRUE);
         return;
     }
     
