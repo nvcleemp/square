@@ -104,21 +104,22 @@ void tikzImageRectangle(FILE *f){
     
     fprintf(f, "\\begin{tikzpicture}["
                              "yscale=-1,"
-                             "s1/.style={red},"
-                             "s2/.style={green},"
-                             "s3/.style={blue},"
-                             "s4/.style={yellow},"
-                             "s5/.style={cyan},"
-                             "s6/.style={magenta}"
+                             "ultra thick, draw=black,"
+                             "s1/.style={fill=red},"
+                             "s2/.style={fill=green},"
+                             "s3/.style={fill=blue},"
+                             "s4/.style={fill=yellow},"
+                             "s5/.style={fill=cyan},"
+                             "s6/.style={fill=magenta}"
                 "]\n\n");
     
-    fprintf(f, "\\fill[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
+    fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
             GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
     fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0));
     
     for(i = 1; i < areaWidth; i++){
         if(GRID_VALUE(i,0) != GRID_VALUE(i-1,0)){
-            fprintf(f, "\\fill[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
+            fprintf(f, "\\filldraw[s%d] (%d,0) -- (%d,0) -- (%d,%d) -- (%d,%d) -- (%d,0);\n",
             GRID_VALUE(i,0), i, i + GRID_VALUE(i,0), i + GRID_VALUE(i,0), GRID_VALUE(i,0), i, GRID_VALUE(i,0), i);
             fprintf(f, "\\node at (%f, %f) {%d};\n", i + GRID_VALUE(i,0)/2.0, GRID_VALUE(i,0)/2.0, GRID_VALUE(i,0));
         }
@@ -126,13 +127,13 @@ void tikzImageRectangle(FILE *f){
     
     for(i = 1; i < areaHeight; i++){
         if(GRID_VALUE(0,i) != GRID_VALUE(0, i-1)){
-            fprintf(f, "\\fill[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
+            fprintf(f, "\\filldraw[s%d] (0,%d) -- (%d,%d) -- (%d,%d) -- (0,%d) -- (0,%d);\n",
             GRID_VALUE(0,i), i, GRID_VALUE(0,i), i, GRID_VALUE(0,i), i + GRID_VALUE(0,i), i + GRID_VALUE(0, i), i);
             fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,i)/2.0, i + GRID_VALUE(0,i)/2.0, GRID_VALUE(0,i));
         }
         for(j = 1; j < areaWidth; j++){
             if((GRID_VALUE(j,i) != GRID_VALUE(j, i-1)) && (GRID_VALUE(j,i) != GRID_VALUE(j-1, i))){
-                fprintf(f, "\\fill[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
+                fprintf(f, "\\filldraw[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
                         GRID_VALUE(j,i),
                         j, i,
                         j + GRID_VALUE(j,i), i,
