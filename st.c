@@ -20,6 +20,14 @@
 #include <getopt.h>
 #include <string.h>
 
+const char const * colours[]= {"", //no zero
+                               "red",
+                               "blue",
+                               "yellow",
+                               "green",
+                               "cyan",
+                               "brown!80!white"};
+
 typedef int boolean;
 
 #define FALSE 0
@@ -102,16 +110,11 @@ void printRectangle(FILE *f){
 void tikzImageRectangle(FILE *f){
     int i, j;
     
-    fprintf(f, "\\begin{tikzpicture}["
-                             "yscale=-1,"
-                             "ultra thick, draw=black,"
-                             "s1/.style={fill=red},"
-                             "s2/.style={fill=green},"
-                             "s3/.style={fill=blue},"
-                             "s4/.style={fill=yellow},"
-                             "s5/.style={fill=cyan},"
-                             "s6/.style={fill=magenta}"
-                "]\n\n");
+    fprintf(f, "\\begin{tikzpicture}[yscale=-1, ultra thick, draw=black");
+    for(i = 1; i <= 6; i++){
+        fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
+    }
+    fprintf(f, "]\n\n");
     
     fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
             GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
