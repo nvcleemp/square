@@ -480,6 +480,8 @@ void help(char *name) {
     fprintf(stderr, "Usage\n=====\n");
     fprintf(stderr, " %s [options] n\n\n", name);
     fprintf(stderr, "Valid options\n=============\n");
+    fprintf(stderr, "    -n, --neat\n");
+    fprintf(stderr, "       Construct nowhere-neat tilings instead of no-touch tilings.\n");
     fprintf(stderr, "    -t, --tikz\n");
     fprintf(stderr, "       Write a tikzpicture for each solution to stdout.\n");
     fprintf(stderr, "    -s, --skip\n");
@@ -500,14 +502,20 @@ int main(int argc, char *argv[]) {
     int c;
     char *name = argv[0];
     static struct option long_options[] = {
+         {"neat", no_argument, NULL, 'n'},
          {"tikz", no_argument, NULL, 't'},
          {"skip", no_argument, NULL, 's'},
          {"help", no_argument, NULL, 'h'}
     };
     int option_index = 0;
+    
+    boolean nowhereNeat = FALSE;
 
-    while ((c = getopt_long(argc, argv, "hts", long_options, &option_index)) != -1) {
+    while ((c = getopt_long(argc, argv, "htsn", long_options, &option_index)) != -1) {
         switch (c) {
+            case 'n':
+                nowhereNeat = TRUE;
+                break;
             case 't':
                 tikzOutput = TRUE;
                 break;
@@ -552,7 +560,11 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
     
-    addNextNoTouchSquare(0,0);
+    if(nowhereNeat){
+        addNextNowhereNeatSquare(0, 0);
+    } else {
+        addNextNoTouchSquare(0, 0);
+    }
     
     fprintf(stderr, "Found %d solution%s.\n", 
             solutionCount, solutionCount == 1 ? "" : "s");
