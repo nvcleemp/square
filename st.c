@@ -66,6 +66,7 @@ unsigned int solutionCount = 0;
 #define LOWERLEFT 2
 #define UPPERRIGHT 3
 #define LOWERRIGHT 4
+#define IS_UPPERLEFT_CORNER(X,Y) (corners[Y][X]==UPPERLEFT)
 #define SET_SQUARE_CORNERS(X,Y,S) SET_SQUARE(X,Y,S)\
                                   corners[Y][X] = UPPERLEFT;\
                                   corners[Y][X + (S)] = UPPERRIGHT;\
@@ -153,6 +154,38 @@ void tikzImageRectangle(FILE *f){
         }
         for(j = 1; j < areaWidth; j++){
             if((GRID_VALUE(j,i) != GRID_VALUE(j, i-1)) && (GRID_VALUE(j,i) != GRID_VALUE(j-1, i))){
+                fprintf(f, "\\filldraw[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
+                        GRID_VALUE(j,i),
+                        j, i,
+                        j + GRID_VALUE(j,i), i,
+                        j + GRID_VALUE(j,i), i + GRID_VALUE(j, i),
+                        j, i + GRID_VALUE(j, i),
+                        j, i);
+                fprintf(f, "\\node at (%f, %f) {%d};\n", 
+                        j + GRID_VALUE(j,i)/2.0, i + GRID_VALUE(j,i)/2.0, GRID_VALUE(j,i));
+            }
+        }
+    }
+    
+    fprintf(f, "\n\\end{tikzpicture}\n");
+}
+
+void tikzImageRectangleCorners(FILE *f){
+    int i, j;
+    
+    fprintf(f, "\\begin{tikzpicture}[yscale=-1, ultra thick, draw=black");
+    for(i = 1; i <= 6; i++){
+        fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
+    }
+    fprintf(f, "]\n\n");
+    
+    fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
+            GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
+    fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0));
+    
+    for(i = 0; i < areaHeight; i++){
+        for(j = 0; j < areaWidth; j++){
+            if(IS_UPPERLEFT_CORNER(j, i)){
                 fprintf(f, "\\filldraw[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
                         GRID_VALUE(j,i),
                         j, i,
