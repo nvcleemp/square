@@ -44,6 +44,7 @@ typedef unsigned char size;
 size areaWidth;
 size areaHeight;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
+size corners[MAX_SIZE][MAX_SIZE] = {{0}};
 
 unsigned int solutionCount = 0;
 
@@ -60,6 +61,22 @@ unsigned int solutionCount = 0;
                                  for(local_j = (Y); local_j < (Y) + (S); local_j++)\
                                      grid[local_j][local_i] = 0;\
                             }
+
+#define UPPERLEFT 1
+#define LOWERLEFT 2
+#define UPPERRIGHT 3
+#define LOWERRIGHT 4
+#define SET_SQUARE_CORNERS(X,Y,S) SET_SQUARE(X,Y,S)\
+                                  corners[Y][X] = UPPERLEFT;\
+                                  corners[Y][X + (S)] = UPPERRIGHT;\
+                                  corners[Y + (S)][X] = LOWERLEFT;\
+                                  corners[Y + (S)][X + (S)] = LOWERRIGHT;
+
+#define UNSET_SQUARE_CORNERS(X,Y,S) UNSET_SQUARE(X,Y,S)\
+                                  corners[Y][X] = 0;\
+                                  corners[Y][X + (S)] = 0;\
+                                  corners[Y + (S)][X] = 0;\
+                                  corners[Y + (S)][X + (S)] = 0;
 
 #define LIES_IN_SQUARE(SX,SY,S,X,Y) (((X) >= (SX)) && ((Y) >= (SY)) && ((X) < (SX + S)) && ((Y) < (SY + S)))
 
