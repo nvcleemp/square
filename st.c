@@ -187,7 +187,7 @@ void tikzImageRectangleCorners(FILE *f){
     
     for(i = 0; i < areaHeight; i++){
         for(j = 0; j < areaWidth; j++){
-            if(IS_UPPERLEFT_CORNER(j, i)){
+            if(IS_UPPERLEFT_CORNER(j, i) || GRID_VALUE(j,i)==1){
                 fprintf(f, "\\filldraw[s%d] (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d) -- (%d,%d);\n",
                         GRID_VALUE(j,i),
                         j, i,
