@@ -137,8 +137,12 @@ void printRectangle(FILE *f){
 void printTikzHeader(FILE *f){
     int i;
     fprintf(f, "\\begin{tikzpicture}[yscale=-1, ultra thick, draw=black");
-    for(i = 1; i <= 6; i++){
-        fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
+    for(i = smallestTile; i <= largestTile; i++){
+        if(i <= COLOUR_NAMES_COUNT){
+            fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
+        } else {
+            fprintf(f, ",\n                    s%d/.style={fill=black}", i);
+        }
     }
     fprintf(f, "]\n\n");
 }
