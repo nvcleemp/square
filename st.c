@@ -21,12 +21,15 @@
 #include <string.h>
 
 const char const * colours[]= {"", //no zero
-                               "red",
-                               "blue",
-                               "yellow",
-                               "green",
-                               "cyan",
-                               "brown!80!white"};
+                               "red", //1
+                               "blue", //2
+                               "yellow", //3
+                               "green", //4
+                               "cyan", //5
+                               "brown!80!white", //6
+                               "violet!60!white", //7
+                               "magenta", //8
+                               "pink"}; //9 
 
 typedef int boolean;
 
