@@ -46,6 +46,9 @@ size areaHeight;
 size grid[MAX_SIZE][MAX_SIZE] = {{0}};
 size corners[MAX_SIZE][MAX_SIZE] = {{0}};
 
+size smallestTile = 1;
+size largestTile = 6;
+
 unsigned int solutionCount = 0;
 
 #define GRID_VALUE(X,Y) (grid[Y][X])
@@ -361,9 +364,9 @@ void addNextNowhereNeatSquare(int lastX, int lastY){
         return;
     }
     
-    size minSize = 1, maxSize = 0;
+    size minSize = smallestTile, maxSize = 0;
     
-    while(maxSize < 6 && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
+    while(maxSize < largestTile && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
             (!GRID_VALUE(x + maxSize, y))){
         maxSize++;
     }
@@ -430,19 +433,19 @@ void addNextNoTouchSquare(int lastX, int lastY){
         return;
     }
     
-    size minSize = 1, maxSize = 0;
+    size minSize = smallestTile, maxSize = 0;
     
     if(x < 3 || y < 3) {
         //no squares of size 1 or 2 in the outer 3 layers
-        minSize = 3;
+        minSize = minSize < 3 ? 3 : minSize;
         
         if(x == 0 && y == 0){
             //no square of size 3 in the corners
-            minSize = 4;
+            minSize = minSize < 4 ? 4 : minSize;
         }
     }
     
-    while(maxSize < 6 && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
+    while(maxSize < largestTile && LIES_IN_MAIN_AREA(x + maxSize, y + maxSize) &&
             (!GRID_VALUE(x + maxSize, y))){
         maxSize++;
     }
