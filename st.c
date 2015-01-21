@@ -193,10 +193,6 @@ void tikzImageRectangleCorners(FILE *f){
     
     printTikzHeader(f);
     
-    fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
-            GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
-    fprintf(f, "\\node at (%f, %f) {%d};\n", GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0)/2.0, GRID_VALUE(0,0));
-    
     for(i = 0; i < areaHeight; i++){
         for(j = 0; j < areaWidth; j++){
             if(IS_UPPERLEFT_CORNER(j, i) || GRID_VALUE(j,i)==1){
