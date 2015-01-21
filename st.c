@@ -514,6 +514,8 @@ int main(int argc, char *argv[]) {
     int c;
     char *name = argv[0];
     static struct option long_options[] = {
+         {"min", required_argument, NULL, 'm'},
+         {"max", required_argument, NULL, 'M'},
          {"neat", no_argument, NULL, 'n'},
          {"tikz", no_argument, NULL, 't'},
          {"skip", no_argument, NULL, 's'},
@@ -523,8 +525,14 @@ int main(int argc, char *argv[]) {
     
     boolean nowhereNeat = FALSE;
 
-    while ((c = getopt_long(argc, argv, "htsn", long_options, &option_index)) != -1) {
+    while ((c = getopt_long(argc, argv, "htsnm:M:", long_options, &option_index)) != -1) {
         switch (c) {
+            case 'm':
+                smallestTile = (size)(atoi(optarg));
+                break;
+            case 'M':
+                largestTile = (size)(atoi(optarg));
+                break;
             case 'n':
                 nowhereNeat = TRUE;
                 break;
@@ -545,6 +553,12 @@ int main(int argc, char *argv[]) {
                 usage(name);
                 return EXIT_FAILURE;
         }
+    }
+    
+    if(smallestTile < 1){
+        fprintf(stderr, "Tile sizes should be positive integers.\n");
+        fprintf(stderr, "Setting minimum size to 1.\n");
+        smallestTile = 1;
     }
     
     if(tikzOutputFile == NULL){
