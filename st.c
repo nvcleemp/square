@@ -30,6 +30,7 @@ const char const * colours[]= {"", //no zero
                                "violet!60!white", //7
                                "magenta", //8
                                "pink"}; //9 
+#define COLOUR_NAMES_COUNT 9
 
 typedef int boolean;
 
@@ -133,14 +134,19 @@ void printRectangle(FILE *f){
     fprintf(f, "\n");
 }
 
-void tikzImageRectangle(FILE *f){
-    int i, j;
-    
+void printTikzHeader(FILE *f){
+    int i;
     fprintf(f, "\\begin{tikzpicture}[yscale=-1, ultra thick, draw=black");
     for(i = 1; i <= 6; i++){
         fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
     }
     fprintf(f, "]\n\n");
+}
+
+void tikzImageRectangle(FILE *f){
+    int i, j;
+    
+    printTikzHeader(f);
     
     fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
             GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
@@ -181,11 +187,7 @@ void tikzImageRectangle(FILE *f){
 void tikzImageRectangleCorners(FILE *f){
     int i, j;
     
-    fprintf(f, "\\begin{tikzpicture}[yscale=-1, ultra thick, draw=black");
-    for(i = 1; i <= 6; i++){
-        fprintf(f, ",\n                    s%d/.style={fill=%s}", i, colours[i]);
-    }
-    fprintf(f, "]\n\n");
+    printTikzHeader(f);
     
     fprintf(f, "\\filldraw[s%d] (0,0) -- (%d,0) -- (%d,%d) -- (0,%d) -- (0,0);\n",
             GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0), GRID_VALUE(0,0));
