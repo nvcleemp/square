@@ -55,6 +55,11 @@ size largestTile = 6;
 
 unsigned int solutionCount = 0;
 
+//profiling variables
+unsigned int maxTiles = 0;
+unsigned int currentTiles = 0;
+unsigned int maxReachedHeight = 0;
+
 #define GRID_VALUE(X,Y) (grid[Y][X])
 
 #define SET_SQUARE(X,Y,S) {int local_i, local_j; \
@@ -131,7 +136,8 @@ void printRectangle(FILE *f){
         }
         fprintf(f, "\n");
     }
-    fprintf(f, "\n");
+    fprintf(f, "\nThis solution has %d tile%s.\n\n", currentTiles,
+            currentTiles == 1 ? "" : "s");
 }
 
 void printTikzHeader(FILE *f){
@@ -363,6 +369,10 @@ void addNextNowhereNeatSquare(int lastX, int lastY){
         }
     }
     
+    if(y > maxReachedHeight){
+        maxReachedHeight = y;
+    }
+    
     if(x == areaWidth && y == areaHeight){
         //square is completely filled
         handleFinishedSquare(FALSE);
@@ -389,7 +399,12 @@ void addNextNowhereNeatSquare(int lastX, int lastY){
             }
         }
         SET_SQUARE_CORNERS(x, y, s);
+        currentTiles++;
         addNextNowhereNeatSquare(x, y);
+        if(currentTiles > maxTiles){
+            maxTiles = currentTiles;
+        }
+        currentTiles--;
         UNSET_SQUARE_CORNERS(x, y, s);
     }
 }
@@ -412,6 +427,10 @@ void addNextNoTouchSquare(int lastX, int lastY){
                 break;
             }
         }
+    }
+    
+    if(y > maxReachedHeight){
+        maxReachedHeight = y;
     }
     
     if(lastY == 0 && y > 0) {
@@ -477,7 +496,12 @@ void addNextNoTouchSquare(int lastX, int lastY){
             }
         }
         SET_SQUARE(x, y, s);
+        currentTiles++;
         addNextNoTouchSquare(x, y);
+        if(currentTiles > maxTiles){
+            maxTiles = currentTiles;
+        }
+        currentTiles--;
         UNSET_SQUARE(x, y, s);
     }
 }
@@ -590,6 +614,10 @@ int main(int argc, char *argv[]) {
     
     fprintf(stderr, "Found %d solution%s.\n", 
             solutionCount, solutionCount == 1 ? "" : "s");
+    if(solutionCount == 0){
+        fprintf(stderr, "Maximum reached height: %d\n", maxReachedHeight);
+    }
+    fprintf(stderr, "Maximum number of tiles used: %d\n", maxTiles);
     
     return EXIT_SUCCESS;
 }
